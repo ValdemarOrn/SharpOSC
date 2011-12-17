@@ -77,4 +77,4 @@ Example: Receiving a Message (Asynchronous)
 		}
 	}
 
-By giving UDPListener a callback it you don't have to periodically check for incoming messages. The listener will simply invoke the callback whenever a message is received. You are free to implement any code you need inside the callback.
+By giving UDPListener a callback you don't have to periodically check for incoming messages. The listener will simply invoke the callback whenever a message is received. You are free to implement any code you need inside the callback.
