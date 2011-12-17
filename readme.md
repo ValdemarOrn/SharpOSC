@@ -86,3 +86,10 @@ Example: Receiving a Message (Asynchronous)
 	}
 
 By giving UDPListener a callback you don't have to periodically check for incoming messages. The listener will simply invoke the callback whenever a message is received. You are free to implement any code you need inside the callback.
+
+Contribute
+----------
+
+If you want to help make SharpOSC better then there are things that need to be addressed. The testing has to be improved and the UDPListener needs an overhaul (the thread-management is very primitive although it works). 
+
+I would also love to get some feedback. Use the Issue tracker on Github to send bug reports and feature requests, or just if you have something to say about the project. If you have code changes that you would like to have integrated into the main repository, send me a pull request or a patch. I will try my best to integrate them and make sure SharpOSC improves and matures.
