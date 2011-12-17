@@ -26,7 +26,7 @@ The following OSC types are supported:
 * F	- False. No bytes are allocated in the argument data. (System.Boolean)
 * N	- Nil. No bytes are allocated in the argument data. (null)
 * I	- Infinitum. No bytes are allocated in the argument data. (Double.PositiveInfinity)
-* [	- Indicates the beginning of an array. The tags following are for data in the Array until a close brace tag is reached. (System.Object[] / List<object>)
+* [	- Indicates the beginning of an array. The tags following are for data in the Array until a close brace tag is reached. (System.Object[] / List\<object\>)
 * ]	- Indicates the end of an array.
 
 (Note that nested arrays (arrays within arrays) are not supported, the OSC specification is unclear about whether that it is even allowed)
