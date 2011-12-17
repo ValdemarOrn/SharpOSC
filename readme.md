@@ -9,7 +9,7 @@ SharpOSC is a small library designed to make interacting with Open Sound Control
 + Transmit OSC packets via UDP.
 + Receive OSC packets via UDP.
 
-The following OSC types are supported:
+[The following OSC types](http://opensoundcontrol.org/spec-1_0) are supported:
 
 * i	- int32 (System.Int32)
 * f	- float32 (System.Single)
