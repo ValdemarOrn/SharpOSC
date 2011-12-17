@@ -11,6 +11,13 @@ SharpOSC is a small library designed to make interacting with Open Sound Control
 
 Currently all standard OSC types are supported as well as the "nonstandard" types (this includes arrays, but currently nested arrays are not supported. The OSC definition is unclear about whether nested arrays are even allowed)
 
+License
+-------
+
+SharpOSC is licensed under the MIT license. 
+
+See License.txt
+
 Using The Library
 -----------------
 
