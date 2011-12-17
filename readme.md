@@ -4,12 +4,32 @@ SharpOSC - OSC Library for .NET 3.5
 
 SharpOSC is a small library designed to make interacting with Open Sound Control easy (OSC). It provides the following features:
 
-+ Produce an OSC Packet (messages and bundles) from .NET values. 
-+ Translate an OSC message (consisting of a sequence of bytes) into an easy-to-use .NET object.
++ Produce an OSC Packet (messages and bundles) from .NET values.
++ Translate an OSC message (consisting of a sequence of bytes) into a .NET object.
 + Transmit OSC packets via UDP.
 + Receive OSC packets via UDP.
 
-Currently all standard OSC types are supported as well as the "nonstandard" types (this includes arrays, but currently nested arrays are not supported. The OSC definition is unclear about whether nested arrays are even allowed)
+The following OSC types are supported:
+
+* i	- int32 (System.Int32)
+* f	- float32 (System.Single)
+* s	- OSC-string (System.String)
+* b	- OSC-blob (System.Byte[])
+* h	- 64 bit big-endian two's complement integer (System.Int64)
+* t	- OSC-timetag (System.UInt64 / SharpOSC.Timetag)
+* d	- 64 bit ("double") IEEE 754 floating point number (System.Double)
+* S	- Alternate type represented as an OSC-string (for example, for systems that differentiate "symbols" from "strings") (SharpOSC.Symbol)
+* c	- an ascii character, sent as 32 bits (System.Char)
+* r	- 32 bit RGBA color (SharpOSC.RGBA)
+* m	- 4 byte MIDI message. Bytes from MSB to LSB are: port id, status byte, data1, data2 (SharpOSC.Midi)
+* T	- True. No bytes are allocated in the argument data. (System.Boolean)
+* F	- False. No bytes are allocated in the argument data. (System.Boolean)
+* N	- Nil. No bytes are allocated in the argument data. (null)
+* I	- Infinitum. No bytes are allocated in the argument data. (Double.PositiveInfinity)
+* [	- Indicates the beginning of an array. The tags following are for data in the Array until a close brace tag is reached. (System.Object[] / List<object>)
+* ]	- Indicates the end of an array.
+
+(Note that nested arrays (arrays within arrays) are not supported, the OSC specification is unclear about whether that it is even allowed)
 
 Download
 --------
