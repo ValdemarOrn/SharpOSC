@@ -49,5 +49,29 @@ namespace SharpOSC.Tests
 			Assert.IsTrue(ex);
 			l1.Close();
 		}
+
+		/// <summary>
+		/// Bombard the listener with messages, check if they are all received
+		/// </summary>
+		[TestCase]
+		public void ListenerLoadTest()
+		{
+			var listener = new UDPListener(55555);
+
+			var sender = new SharpOSC.UDPSender("localhost", 55555);
+
+			var msg = new SharpOSC.OscMessage("/test/", 23.42f);
+
+			for (int i = 0; i < 1000; i++)
+				sender.Send(msg);
+
+			for (int i = 0; i < 1000; i++)
+			{
+				var receivedMessage = listener.Receive();
+				Assert.NotNull(receivedMessage);
+			}
+
+			listener.Dispose();
+		}
 	}
 }
