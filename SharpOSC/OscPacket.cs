@@ -47,10 +47,22 @@ namespace SharpOSC
 			while (index % 4 != 0)
 				index++;
 
+			bool commaParsed = false;
+
 			foreach (char type in types)
 			{
+				// skip leading comma
+				if (type == ',' && !commaParsed)
+				{
+					commaParsed = true;
+					continue;
+				}
+
 				switch(type)
 				{
+					case ('\0'):
+						break;
+
 					case('i'):
 						int intVal = getInt(msg, index);
 						arguments.Add(intVal);
@@ -145,8 +157,7 @@ namespace SharpOSC
 						break;
 
 					default:
-						// ignore everything else
-						break;
+						throw new Exception("OSC type tag '" + type + "' is unknown.");
 				}
 
 				while (index % 4 != 0)

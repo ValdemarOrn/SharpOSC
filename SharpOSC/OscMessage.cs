@@ -121,7 +121,7 @@ namespace SharpOSC
 						continue;
 
 					default:
-						break;
+						throw new Exception("Unable to transmit values of type " + type);
 				}
 
 				i++;

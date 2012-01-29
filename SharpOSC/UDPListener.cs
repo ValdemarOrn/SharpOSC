@@ -19,6 +19,9 @@ namespace SharpOSC
 		}
 		int _port;
 		Thread thread;
+		
+		object listenerLock;
+
 		UdpClient receivingUdpClient;
 		IPEndPoint RemoteIpEndPoint;
 
@@ -29,10 +32,27 @@ namespace SharpOSC
 
 		public UDPListener(int port)
 		{
+			listenerLock = new object(); 
 			_port = port;
 			queue = new Queue<byte[]>();
 
-			receivingUdpClient = new UdpClient(port);
+			// try to open the port 10 times, else fail
+			for (int i = 0; i < 10; i++)
+			{
+				try
+				{
+					receivingUdpClient = new UdpClient(port);
+					break;
+				}
+				catch (Exception)
+				{
+					// Failed in ten tries, throw the exception and give up
+					if (i >= 9)
+						throw;
+
+					Thread.Sleep(5);
+				}
+			}
 			RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
 			thread = new Thread(new ThreadStart(Listen));
 			thread.Start();
@@ -50,7 +70,7 @@ namespace SharpOSC
 
 		public void Listen()
 		{
-			lock (thread)
+			lock (listenerLock)
 			{
 				while (!closed)
 				{
@@ -77,7 +97,16 @@ namespace SharpOSC
 					}
 					else if (OscPacketCallback != null)
 					{
-						var packet = OscPacket.GetPacket(bytes);
+						OscPacket packet = null;
+						try
+						{
+							packet = OscPacket.GetPacket(bytes);
+						}
+						catch (Exception e) 
+						{ 
+							// If there is an error reading the packet, null is sent to the callback
+						}
+
 						OscPacketCallback(packet);
 					}
 					else
@@ -96,10 +125,9 @@ namespace SharpOSC
 		{
 			closed = true;
 			receivingUdpClient.Close();
-			lock (thread)
-			{
-				thread.Abort(); 
-			}
+			
+			// Wait for the lock to become open, then we know the listener has stopped
+			lock (listenerLock) { }
 		}
 
 		public void Dispose()
