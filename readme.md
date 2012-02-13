@@ -9,6 +9,15 @@ SharpOSC is a small library designed to make interacting with Open Sound Control
 + Transmit OSC packets via UDP.
 + Receive OSC packets via UDP.
 
+Download
+--------
+
+If you don't want to build SharpOSC from source you can download compiled versions from [Here](https://github.com/valdiorn/SharpOSC/tree/master/Binaries)
+
+
+Supported Types
+---------------
+
 [The following OSC types](http://opensoundcontrol.org/spec-1_0) are supported:
 
 * i	- int32 (System.Int32)
@@ -31,12 +40,6 @@ SharpOSC is a small library designed to make interacting with Open Sound Control
 
 (Note that nested arrays (arrays within arrays) are not supported, the OSC specification is unclear about whether that it is even allowed)
 
-Download
---------
-
-If you don't want to build SharpOSC from source you can download the compiled dll assembly by clicking "Download" in the tab menu)
-
-The latest version (version 0.1.0.0) can be found [Here](https://github.com/downloads/valdiorn/SharpOSC/SharpOSC_v0.1.0.0.zip)
 
 
 License
