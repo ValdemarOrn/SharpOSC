@@ -13,28 +13,25 @@ namespace SharpOSC
 
 	public class UDPListener : IDisposable
 	{
-		public int Port
-		{
-			get { return this._port; }
-		}
-		int _port;
-		Thread thread;
+		public int Port { get; private set; }
 		
-		object listenerLock;
+		object callbackLock;
 
 		UdpClient receivingUdpClient;
 		IPEndPoint RemoteIpEndPoint;
 
-		private HandleBytePacket BytePacketCallback = null;
-		private HandleOscPacket OscPacketCallback = null;
+		HandleBytePacket BytePacketCallback = null;
+		HandleOscPacket OscPacketCallback = null;
 
-		private Queue<byte[]> queue;
+		Queue<byte[]> queue;
+		ManualResetEvent ClosingEvent;
 
 		public UDPListener(int port)
 		{
-			listenerLock = new object(); 
-			_port = port;
+			Port = port;
 			queue = new Queue<byte[]>();
+			ClosingEvent = new ManualResetEvent(false);
+			callbackLock = new object();
 
 			// try to open the port 10 times, else fail
 			for (int i = 0; i < 10; i++)
@@ -54,8 +51,10 @@ namespace SharpOSC
 				}
 			}
 			RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-			thread = new Thread(new ThreadStart(Listen));
-			thread.Start();
+
+			// setup first async event
+			AsyncCallback callBack = new AsyncCallback(ReceiveCallback);
+			receivingUdpClient.BeginReceive(callBack, null);
 		}
 
 		public UDPListener(int port, HandleOscPacket callback) : this(port)
@@ -68,66 +67,72 @@ namespace SharpOSC
 			this.BytePacketCallback = callback;
 		}
 
-		public void Listen()
+		void ReceiveCallback(IAsyncResult result)
 		{
-			lock (listenerLock)
+			Monitor.Enter(callbackLock);
+			Byte[] bytes = null;
+
+			try
 			{
-				while (!closed)
+				bytes = receivingUdpClient.EndReceive(result, ref RemoteIpEndPoint);
+			}
+			catch (ObjectDisposedException e)
+			{ 
+				// Ignore if disposed. This happens when closing the listener
+			}
+
+			// Process bytes
+			if (bytes != null && bytes.Length > 0)
+			{
+				if (BytePacketCallback != null)
 				{
-					Byte[] bytes = null;
+					BytePacketCallback(bytes);
+				}
+				else if (OscPacketCallback != null)
+				{
+					OscPacket packet = null;
 					try
 					{
-						bytes = receivingUdpClient.Receive(ref RemoteIpEndPoint);
+						packet = OscPacket.GetPacket(bytes);
 					}
-					catch (System.Net.Sockets.SocketException e)
+					catch (Exception e)
 					{
-						if (closed)
-							break;	// Shit breaks when I'm closing the socket, just break the loop
-									// Todo: Fix this shit
-						else
-							throw e;
+						// If there is an error reading the packet, null is sent to the callback
 					}
 
-					if (bytes == null || bytes.Length == 0)
-						continue;
-
-					if (BytePacketCallback != null)
+					OscPacketCallback(packet);
+				}
+				else
+				{
+					lock (queue)
 					{
-						BytePacketCallback(bytes);
-					}
-					else if (OscPacketCallback != null)
-					{
-						OscPacket packet = null;
-						try
-						{
-							packet = OscPacket.GetPacket(bytes);
-						}
-						catch (Exception e) 
-						{ 
-							// If there is an error reading the packet, null is sent to the callback
-						}
-
-						OscPacketCallback(packet);
-					}
-					else
-					{
-						lock (queue)
-						{
-							queue.Enqueue(bytes);
-						}
+						queue.Enqueue(bytes);
 					}
 				}
 			}
+
+			if (closing)
+				ClosingEvent.Set();
+			else
+			{
+				// Setup next async event
+				AsyncCallback callBack = new AsyncCallback(ReceiveCallback);
+				receivingUdpClient.BeginReceive(callBack, null);
+			}
+			Monitor.Exit(callbackLock);
 		}
 
-		bool closed = false;
+		bool closing = false;
 		public void Close()
 		{
-			closed = true;
-			receivingUdpClient.Close();
+			lock (callbackLock)
+			{
+				ClosingEvent.Reset();
+				closing = true;
+				receivingUdpClient.Close();
+			}
+			ClosingEvent.WaitOne();
 			
-			// Wait for the lock to become open, then we know the listener has stopped
-			lock (listenerLock) { }
 		}
 
 		public void Dispose()
@@ -137,6 +142,8 @@ namespace SharpOSC
 
 		public OscPacket Receive()
 		{
+			if (closing) throw new Exception("UDPListener has been closed.");
+
 			lock (queue)
 			{
 				if (queue.Count() > 0)
@@ -152,6 +159,8 @@ namespace SharpOSC
 
 		public byte[] ReceiveBytes()
 		{
+			if (closing) throw new Exception("UDPListener has been closed.");
+
 			lock (queue)
 			{
 				if (queue.Count() > 0)

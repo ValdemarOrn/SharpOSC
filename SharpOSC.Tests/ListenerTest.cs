@@ -51,6 +51,32 @@ namespace SharpOSC.Tests
 		}
 
 		/// <summary>
+		/// Single message receive
+		/// </summary>
+		[TestCase]
+		public void ListenerSingleMSG()
+		{
+			var listener = new UDPListener(55555);
+
+			var sender = new SharpOSC.UDPSender("localhost", 55555);
+
+			var msg = new SharpOSC.OscMessage("/test/", 23.42f);
+
+			sender.Send(msg);
+
+			while (true)
+			{
+				var pack = listener.Receive();
+				if (pack == null)
+					Thread.Sleep(1);
+				else
+					break;
+			}
+
+			listener.Dispose();
+		}
+
+		/// <summary>
 		/// Bombard the listener with messages, check if they are all received
 		/// </summary>
 		[TestCase]
