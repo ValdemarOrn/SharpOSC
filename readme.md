@@ -12,7 +12,9 @@ SharpOSC is a small library designed to make interacting with Open Sound Control
 Download
 --------
 
-If you don't want to build SharpOSC from source you can download compiled versions from [Here](https://github.com/valdiorn/SharpOSC/tree/master/Binaries)
+If you don't want to build SharpOSC from source you can download compiled versions.
+
+__[Download Binaries Here](https://github.com/valdiorn/SharpOSC/tree/master/Binaries)__
 
 
 Supported Types
