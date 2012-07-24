@@ -89,7 +89,7 @@ Example: Receiving a Message (Synchronous)
 		}
 	}
 
-This shows a very simple way of waiting for incoming messages. The listener.Receive() method will check if the listener has received any new messages since it was last called. If there is a new message that has not been returned it will assign messageReceived to point to that message. If no message has been received since the last call to Receive it will return null.
+This shows a very simple way of waiting for incoming messages. The listener.Receive() method will check if the listener has received any new messages since it was last called. It will poll for a message every millisecond. If there is a new message that has not been returned it will assign messageReceived to point to that message. If no message has been received since the last call to Receive it will return null.
 
 Example: Receiving a Message (Asynchronous)
 -------------------------------------------
@@ -108,6 +108,7 @@ Example: Receiving a Message (Asynchronous)
 			var listener = new UDPListener(55555, callback);
 
 			Console.WriteLine("Press enter to stop");
+			Console.ReadLine();
 			listener.Close();
 		}
 	}
