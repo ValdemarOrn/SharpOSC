@@ -14,7 +14,7 @@ Download
 
 If you don't want to build SharpOSC from source you can download compiled versions.
 
-__[Download Binaries Here](https://github.com/valdiorn/SharpOSC/tree/master/Binaries)__
+__[Download Binaries Here](https://github.com/ValdemarOrn/SharpOSC/tree/master/Binaries)__
 
 
 Supported Types
