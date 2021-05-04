@@ -90,8 +90,13 @@ namespace SharpOSC
 				bytes = proxyUdpClient.EndReceive(result, ref RemoteIpRxEndPoint);
 			}
 			catch (ObjectDisposedException e)
-			{ 
+			{
 				// Ignore if disposed. This happens when closing the listener
+				return;
+			} catch (SocketException e)
+            {
+				// Ignore. This happens when at this moment no remote receiver exists.
+				return;
 			}
 
 			// Process bytes
