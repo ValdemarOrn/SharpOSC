@@ -12,9 +12,7 @@ SharpOSC is a small library designed to make interacting with Open Sound Control
 Download
 --------
 
-If you don't want to build SharpOSC from source you can download compiled versions.
-
-__[Download Binaries Here](https://github.com/ValdemarOrn/SharpOSC/tree/master/Binaries)__
+If you don't want to build SharpOSC from source you can download the compiled dll from releases.
 
 
 Supported Types
@@ -47,14 +45,14 @@ Supported Types
 License
 -------
 
-SharpOSC is licensed under the MIT license. 
+SharpOSC is licensed under the MIT license.
 
 See License.txt
 
 Using The Library
 -----------------
 
-To use the library add a reference to SharpOSC.dll in your .NET project. SharpOSC should now be available to use in your code under that namespace "SharpOSC". 
+To use the library add a reference to SharpOSC.dll in your .NET project. SharpOSC should now be available to use in your code under that namespace "SharpOSC".
 
 Example: Sending a message
 --------------------------
