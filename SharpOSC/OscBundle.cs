@@ -46,7 +46,7 @@ namespace SharpOSC
 
 			int i = 0;
 			byte[] output = new byte[len];
-			Encoding.ASCII.GetBytes(bundle).CopyTo(output, i);
+			Encoding.UTF8.GetBytes(bundle).CopyTo(output, i);
 			i += bundleTagLen;
 			tag.CopyTo(output, i);
 			i += tag.Length;

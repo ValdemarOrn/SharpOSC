@@ -142,10 +142,10 @@ namespace SharpOSC
 			byte[] output = new byte[total];
 			i = 0;
 
-			Encoding.ASCII.GetBytes(Address).CopyTo(output, i);
+			Encoding.UTF8.GetBytes(Address).CopyTo(output, i);
 			i += addressLen;
 
-			Encoding.ASCII.GetBytes(typeString).CopyTo(output, i);
+			Encoding.UTF8.GetBytes(typeString).CopyTo(output, i);
 			i += typeLen;
 
 			foreach (byte[] part in parts)
