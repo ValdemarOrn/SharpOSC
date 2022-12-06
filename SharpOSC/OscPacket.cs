@@ -179,7 +179,7 @@ namespace SharpOSC
 
 			int index = 0;
 
-			var bundleTag = Encoding.ASCII.GetString(bundle.SubArray(0, 8));
+			var bundleTag = Encoding.UTF8.GetString(bundle.SubArray(0, 8));
 			index += 8;
 
 			timetag = getULong(bundle, index);
@@ -222,7 +222,7 @@ namespace SharpOSC
 					if (i == 0)
 						return "";
 
-					address = Encoding.ASCII.GetString(msg.SubArray(index, i - 1));
+					address = Encoding.UTF8.GetString(msg.SubArray(index, i - 1));
 					break;
 				}
 			}
@@ -242,7 +242,7 @@ namespace SharpOSC
 			{
 				if (msg[i - 1] == 0)
 				{
-					types = Encoding.ASCII.GetChars(msg.SubArray(index, i - index));
+					types = Encoding.UTF8.GetChars(msg.SubArray(index, i - index));
 					break;
 				}
 			}
@@ -278,7 +278,7 @@ namespace SharpOSC
 			{
 				if (msg[i - 1] == 0)
 				{
-					output = Encoding.ASCII.GetString(msg.SubArray(index, i - index));
+					output = Encoding.UTF8.GetString(msg.SubArray(index, i - index));
 					break;
 				}
 			}
@@ -381,13 +381,12 @@ namespace SharpOSC
 
 		protected static byte[] setString(string value)
 		{
-			int len = value.Length + (4 - value.Length % 4);
-			if (len <= value.Length) len = len + 4;
+			var bytes = Encoding.UTF8.GetBytes(value);
+            int len = bytes.Length + (4 - bytes.Length % 4);
+            if (len <= bytes.Length) len = len + 4;
 
-			byte[] msg = new byte[len];
-
-			var bytes = Encoding.ASCII.GetBytes(value);
-			bytes.CopyTo(msg, 0);
+            byte[] msg = new byte[len];
+            bytes.CopyTo(msg, 0);
 
 			return msg;
 		}
