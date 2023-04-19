@@ -94,6 +94,8 @@ namespace SharpOSC
 					try
 					{
 						packet = OscPacket.GetPacket(bytes);
+						packet.remoteIPAddress = RemoteIpEndPoint.Address.ToString();
+						packet.remotePort = RemoteIpEndPoint.Port;
 					}
 					catch (Exception e)
 					{

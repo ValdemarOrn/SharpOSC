@@ -7,6 +7,9 @@ namespace SharpOSC
 {
 	public abstract class OscPacket
 	{
+		public string remoteIPAddress;
+		public int remotePort;
+
 		public static OscPacket GetPacket(byte[] OscData)
 		{
 			if (OscData[0] == '#')
@@ -210,7 +213,7 @@ namespace SharpOSC
 		#endregion
 
 		#region Get arguments from byte array
-		
+
 		private static string getAddress(byte[] msg, int index)
 		{
 			int i = index;
